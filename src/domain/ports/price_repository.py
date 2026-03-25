@@ -24,9 +24,7 @@ class IPriceRepository(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    async def save_collection_run(
-        self: IPriceRepository, run: CollectionRun
-    ) -> int:
+    async def save_collection_run(self: IPriceRepository, run: CollectionRun) -> int:
         raise NotImplementedError
 
     @abstractmethod

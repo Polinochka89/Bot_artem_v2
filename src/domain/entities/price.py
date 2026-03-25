@@ -26,7 +26,5 @@ class Price:
     @property
     def is_valid(self: Price) -> bool:
         return (
-            not self.value.is_nan()
-            and not self.value.is_infinite()
-            and self.value > 0
+            not self.value.is_nan() and not self.value.is_infinite() and self.value > 0
         )
