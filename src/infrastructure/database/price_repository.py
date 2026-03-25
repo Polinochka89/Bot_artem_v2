@@ -104,11 +104,7 @@ class SQLitePriceRepository(IPriceRepository):
             """,
             (
                 run.started_at.isoformat(),
-                (
-                    run.finished_at.isoformat()
-                    if run.finished_at is not None
-                    else None
-                ),
+                (run.finished_at.isoformat() if run.finished_at is not None else None),
                 run.prices_collected,
                 int(has_errors),
             ),

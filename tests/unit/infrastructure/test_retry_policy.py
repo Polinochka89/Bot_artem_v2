@@ -68,6 +68,7 @@ async def test_exponential_backoff() -> None:
     asyncio.sleep = fake_sleep
 
     try:
+
         async def factory() -> str:
             raise RuntimeError("fail")
 

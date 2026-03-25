@@ -35,9 +35,7 @@ class RetryPolicy:
         self._jitter = jitter
         self._retryable_exceptions = retryable_exceptions
 
-    async def execute(
-        self: RetryPolicy, coro_factory: Callable[[], Awaitable[T]]
-    ) -> T:
+    async def execute(self: RetryPolicy, coro_factory: Callable[[], Awaitable[T]]) -> T:
         last_error: Exception | None = None
 
         for attempt in range(1, self._max_attempts + 1):

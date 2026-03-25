@@ -40,9 +40,7 @@ class CircuitBreaker:
 
         self._lock = asyncio.Lock()
 
-    async def call(
-        self: CircuitBreaker, coro_factory: Callable[[], Awaitable[T]]
-    ) -> T:
+    async def call(self: CircuitBreaker, coro_factory: Callable[[], Awaitable[T]]) -> T:
         async with self._lock:
             self._before_call_locked()
 
