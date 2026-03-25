@@ -1,68 +1,145 @@
 crypto:
-  - symbol: BTC
-    display_name: "Bitcoin"
-    emoji: "₿"
-    ticker_map:
-      coingecko: "bitcoin"
-      coincap: "bitcoin"
-  - symbol: ETH
-    display_name: "Ethereum"
-    emoji: "Ξ"
-    ticker_map:
-      coingecko: "ethereum"
-      coincap: "ethereum"
-
+- symbol: BTC
+  display_name: Bitcoin
+  emoji: ₿
+  ticker_map:
+    coingecko: bitcoin
+    coincap: bitcoin
+    cryptocompare: BTC
+    coinmarketcap: BTC
+- symbol: ETH
+  display_name: Ethereum
+  emoji: Ξ
+  ticker_map:
+    coingecko: ethereum
+    coincap: ethereum
+    cryptocompare: ETH
+    coinmarketcap: ETH
+- symbol: XRP
+  display_name: Ripple
+  emoji: 💧
+  ticker_map:
+    coingecko: ripple
+    coincap: xrp
+    cryptocompare: XRP
+    coinmarketcap: XRP
+- symbol: SOL
+  display_name: Solana
+  emoji: 🟣
+  ticker_map:
+    coingecko: solana
+    coincap: solana
+    cryptocompare: SOL
+    coinmarketcap: SOL
+- symbol: TON
+  display_name: Toncoin
+  emoji: 🔵
+  ticker_map:
+    coingecko: the-open-network
+    coincap: toncoin
+    cryptocompare: TON
+    coinmarketcap: TON
 currency:
-  - symbol: USD
-    display_name: "Доллар США"
-    emoji: "💵"
-    ticker_map:
-      cbr: "USD"
-      exchangerate: "USD"
-  - symbol: EUR
-    display_name: "Евро"
-    emoji: "💶"
-    ticker_map:
-      cbr: "EUR"
-      exchangerate: "EUR"
-  - symbol: CNY
-    display_name: "Юань"
-    emoji: "🇨🇳"
-    ticker_map:
-      cbr: "CNY"
-      exchangerate: "CNY"
-
+- symbol: USD
+  display_name: Доллар США
+  emoji: 💵
+  ticker_map:
+    cbr: USD
+    exchangerate: USD
+    fixer: USD
+    currencylayer: USD
+    alphavantage_forex: USD
+    twelvedata_forex: USDRUB
+- symbol: EUR
+  display_name: Евро
+  emoji: 💶
+  ticker_map:
+    cbr: EUR
+    exchangerate: EUR
+    fixer: EUR
+    currencylayer: EUR
+    alphavantage_forex: EUR
+    twelvedata_forex: EURRUB
+- symbol: CNY
+  display_name: Юань
+  emoji: 🇨🇳
+  ticker_map:
+    cbr: CNY
+    exchangerate: CNY
+    fixer: CNY
+    currencylayer: CNY
+    alphavantage_forex: CNY
+    twelvedata_forex: CNYRUB
 stocks:
-  - symbol: SBER
-    display_name: "Сбербанк"
-    emoji: "🏦"
-    ticker_map:
-      moex: "SBER"
-      tinkoff: "SBER"
-  - symbol: GAZP
-    display_name: "Газпром"
-    emoji: "🔵"
-    ticker_map:
-      moex: "GAZP"
-      tinkoff: "GAZP"
-
+- symbol: SBER
+  display_name: Сбербанк
+  emoji: 🏦
+  ticker_map:
+    moex: SBER
+    tinkoff: BBG004730N88
+    alphavantage: SBER.ME
+    twelvedata: SBER.ME
+    yahoo_stocks: SBER.ME
+- symbol: LKOH
+  display_name: Лукойл
+  emoji: ⛽️
+  ticker_map:
+    moex: LKOH
+    tinkoff: BBG004731032
+    alphavantage: LKOH.ME
+    twelvedata: LKOH.ME
+    yahoo_stocks: LKOH.ME
+- symbol: ROSN
+  display_name: Роснефть
+  emoji: ⛽️
+  ticker_map:
+    moex: ROSN
+    tinkoff: BBG004731354
+    alphavantage: ROSN.ME
+    twelvedata: ROSN.ME
+    yahoo_stocks: ROSN.ME
 indices:
-  - symbol: IMOEX
-    display_name: "МосБиржа"
-    emoji: "🇷🇺"
-    ticker_map:
-      moex_indices: "IMOEX"
-      stooq: "^WIG"
-
+- symbol: IMOEX
+  display_name: МосБиржа
+  emoji: 🇷🇺
+  ticker_map:
+    moex_indices: IMOEX
+- symbol: SPX
+  display_name: S&P 500
+  emoji: 🇺🇸
+  ticker_map:
+    stooq: ^SPX
+    alphavantage_indices: SPY
+    twelvedata_indices: SPY
+    yahoo_indices: ^GSPC
+- symbol: SSEC
+  display_name: Shanghai
+  emoji: 🇨🇳
+  ticker_map:
+    twelvedata_indices: 000001.SS
+    yahoo_indices: 000001.SS
+    stooq: ^SHC
+- symbol: STOXX50
+  display_name: EuroStoxx50
+  emoji: 🇪🇺
+  ticker_map:
+    twelvedata_indices: STOXX50
+    yahoo_indices: ^STOXX50E
 goods:
-  - symbol: GOLD
-    display_name: "Золото"
-    emoji: "🥇"
-    ticker_map:
-      cbr: "GOLD"
-      stooq: "GC.F"
-  - symbol: OIL
-    display_name: "Нефть Brent"
-    emoji: "🛢️"
-    ticker_map:
-      stooq: "CB.F"
+- symbol: GOLD
+  display_name: Золото
+  emoji: 🥇
+  ticker_map:
+    cbr: GOLD
+    stooq: GC.F
+    yahoo_goods: GC=F
+    alphavantage_goods: GLD
+    twelvedata_goods: XAU/USD
+- symbol: OIL
+  display_name: Нефть Brent
+  emoji: 🛢️
+  ticker_map:
+    stooq: CB.F
+    yahoo_goods: BZ=F
+    alphavantage_goods: BNO
+    twelvedata_goods: BNO

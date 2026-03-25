@@ -111,6 +111,37 @@ class HttpClient:
         except ClientError as error:
             raise ProviderUnavailableError(provider_name, str(error)) from error
 
+    async def post_json(
+        self: HttpClient,
+        url: str,
+        body: JsonValue,
+        headers: Mapping[str, str] | None = None,
+    ) -> JsonValue:
+        session = self._ensure_session()
+        provider_name = self._provider_name(url)
+        merged_headers = self._merge_headers(headers)
+
+        logger.debug("POST JSON %s", url)
+        try:
+            async with session.post(
+                url,
+                json=body,
+                headers=merged_headers,
+            ) as response:
+                self._raise_on_bad_status(response, provider_name)
+                try:
+                    payload = await response.json(content_type=None)
+                    return cast(JsonValue, payload)
+                except (JSONDecodeError, ValueError) as error:
+                    raise ProviderUnavailableError(
+                        provider_name,
+                        f"invalid JSON response: {error}",
+                    ) from error
+        except TimeoutError as error:
+            raise ProviderUnavailableError(provider_name, "timeout") from error
+        except ClientError as error:
+            raise ProviderUnavailableError(provider_name, str(error)) from error
+
     def _merge_headers(
         self: HttpClient, headers: Mapping[str, str] | None
     ) -> dict[str, str]:
