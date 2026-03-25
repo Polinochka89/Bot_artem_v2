@@ -16,12 +16,17 @@ from src.infrastructure.providers.crypto import (
     CryptoCompareProvider,
 )
 from src.infrastructure.providers.currency import (
+    AlphaVantageForexProvider,
     CbrCurrencyProvider,
     CurrencyLayerProvider,
     ExchangeRateProvider,
     FixerProvider,
+    TwelveDataForexProvider,
 )
-from src.infrastructure.providers.goods import CbrGoodsProvider, StooqGoodsProvider
+from src.infrastructure.providers.goods import (
+    CbrGoodsProvider,
+    StooqGoodsProvider,
+)
 from src.infrastructure.providers.indices import (
     AlphaVantageIndicesProvider,
     MoexIndicesProvider,
@@ -107,19 +112,46 @@ def _live_cb(provider_name: str) -> CircuitBreaker:
     [
         (
             "coingecko",
-            [_instrument("BTC", DataCategory.CRYPTO, "coingecko", "bitcoin")],
+            [
+                _instrument("BTC", DataCategory.CRYPTO, "coingecko", "bitcoin"),
+                _instrument("ETH", DataCategory.CRYPTO, "coingecko", "ethereum"),
+                _instrument("XRP", DataCategory.CRYPTO, "coingecko", "ripple"),
+                _instrument("SOL", DataCategory.CRYPTO, "coingecko", "solana"),
+                _instrument(
+                    "TON",
+                    DataCategory.CRYPTO,
+                    "coingecko",
+                    "the-open-network",
+                ),
+            ],
         ),
         (
             "coincap",
-            [_instrument("BTC", DataCategory.CRYPTO, "coincap", "bitcoin")],
+            [
+                _instrument("BTC", DataCategory.CRYPTO, "coincap", "bitcoin"),
+                _instrument("ETH", DataCategory.CRYPTO, "coincap", "ethereum"),
+                _instrument("XRP", DataCategory.CRYPTO, "coincap", "xrp"),
+                _instrument("SOL", DataCategory.CRYPTO, "coincap", "solana"),
+                _instrument("TON", DataCategory.CRYPTO, "coincap", "toncoin"),
+            ],
         ),
         (
             "cryptocompare",
-            [_instrument("BTC", DataCategory.CRYPTO, "cryptocompare", "BTC")],
+            [
+                _instrument("BTC", DataCategory.CRYPTO, "cryptocompare", "BTC"),
+                _instrument("ETH", DataCategory.CRYPTO, "cryptocompare", "ETH"),
+                _instrument("XRP", DataCategory.CRYPTO, "cryptocompare", "XRP"),
+                _instrument("SOL", DataCategory.CRYPTO, "cryptocompare", "SOL"),
+                _instrument("TON", DataCategory.CRYPTO, "cryptocompare", "TON"),
+            ],
         ),
         (
             "cbr_currency",
-            [_instrument("USD", DataCategory.CURRENCY, "cbr", "USD")],
+            [
+                _instrument("USD", DataCategory.CURRENCY, "cbr", "USD"),
+                _instrument("EUR", DataCategory.CURRENCY, "cbr", "EUR"),
+                _instrument("CNY", DataCategory.CURRENCY, "cbr", "CNY"),
+            ],
         ),
         (
             "cbr_goods",
@@ -131,7 +163,11 @@ def _live_cb(provider_name: str) -> CircuitBreaker:
         ),
         (
             "moex_stocks",
-            [_instrument("SBER", DataCategory.STOCKS, "moex", "SBER")],
+            [
+                _instrument("SBER", DataCategory.STOCKS, "moex", "SBER"),
+                _instrument("LKOH", DataCategory.STOCKS, "moex", "LKOH"),
+                _instrument("ROSN", DataCategory.STOCKS, "moex", "ROSN"),
+            ],
         ),
         (
             "moex_indices",
@@ -227,7 +263,11 @@ async def test_live_exchangerate_provider(
         live_retry_policy,
         api_key,
     )
-    instruments = [_instrument("USD", DataCategory.CURRENCY, "exchangerate", "USD")]
+    instruments = [
+        _instrument("USD", DataCategory.CURRENCY, "exchangerate", "USD"),
+        _instrument("EUR", DataCategory.CURRENCY, "exchangerate", "EUR"),
+        _instrument("CNY", DataCategory.CURRENCY, "exchangerate", "CNY"),
+    ]
 
     result = await provider.fetch(instruments)
     _assert_live_payload(result, instruments)
@@ -248,7 +288,13 @@ async def test_live_coinmarketcap_provider(
         live_retry_policy,
         api_key,
     )
-    instruments = [_instrument("BTC", DataCategory.CRYPTO, "coinmarketcap", "BTC")]
+    instruments = [
+        _instrument("BTC", DataCategory.CRYPTO, "coinmarketcap", "BTC"),
+        _instrument("ETH", DataCategory.CRYPTO, "coinmarketcap", "ETH"),
+        _instrument("XRP", DataCategory.CRYPTO, "coinmarketcap", "XRP"),
+        _instrument("SOL", DataCategory.CRYPTO, "coinmarketcap", "SOL"),
+        _instrument("TON", DataCategory.CRYPTO, "coinmarketcap", "TON"),
+    ]
 
     result = await provider.fetch(instruments)
     _assert_live_payload(result, instruments)
@@ -271,6 +317,8 @@ async def test_live_tinkoff_provider(
     )
     instruments = [
         _instrument("SBER", DataCategory.STOCKS, "tinkoff", "BBG004730N88"),
+        _instrument("LKOH", DataCategory.STOCKS, "tinkoff", "BBG004731032"),
+        _instrument("ROSN", DataCategory.STOCKS, "tinkoff", "BBG004731354"),
     ]
 
     result = await provider.fetch(instruments)
@@ -292,7 +340,11 @@ async def test_live_fixer_provider(
         live_retry_policy,
         api_key,
     )
-    instruments = [_instrument("USD", DataCategory.CURRENCY, "fixer", "USD")]
+    instruments = [
+        _instrument("USD", DataCategory.CURRENCY, "fixer", "USD"),
+        _instrument("EUR", DataCategory.CURRENCY, "fixer", "EUR"),
+        _instrument("CNY", DataCategory.CURRENCY, "fixer", "CNY"),
+    ]
 
     result = await provider.fetch(instruments)
     _assert_live_payload(result, instruments)
@@ -315,6 +367,8 @@ async def test_live_currencylayer_provider(
     )
     instruments = [
         _instrument("USD", DataCategory.CURRENCY, "currencylayer", "USD"),
+        _instrument("EUR", DataCategory.CURRENCY, "currencylayer", "EUR"),
+        _instrument("CNY", DataCategory.CURRENCY, "currencylayer", "CNY"),
     ]
 
     result = await provider.fetch(instruments)
@@ -336,7 +390,11 @@ async def test_live_alphavantage_stocks_provider(
         live_retry_policy,
         api_key,
     )
-    instruments = [_instrument("AAPL", DataCategory.STOCKS, "alphavantage", "AAPL")]
+    instruments = [
+        _instrument("SBER", DataCategory.STOCKS, "alphavantage", "SBER.ME"),
+        _instrument("LKOH", DataCategory.STOCKS, "alphavantage", "LKOH.ME"),
+        _instrument("ROSN", DataCategory.STOCKS, "alphavantage", "ROSN.ME"),
+    ]
 
     result = await provider.fetch(instruments)
     _assert_live_payload(result, instruments)
@@ -357,7 +415,11 @@ async def test_live_twelvedata_stocks_provider(
         live_retry_policy,
         api_key,
     )
-    instruments = [_instrument("AAPL", DataCategory.STOCKS, "twelvedata", "AAPL")]
+    instruments = [
+        _instrument("SBER", DataCategory.STOCKS, "twelvedata", "SBER.ME"),
+        _instrument("LKOH", DataCategory.STOCKS, "twelvedata", "LKOH.ME"),
+        _instrument("ROSN", DataCategory.STOCKS, "twelvedata", "ROSN.ME"),
+    ]
 
     result = await provider.fetch(instruments)
     _assert_live_payload(result, instruments)
@@ -403,7 +465,65 @@ async def test_live_twelvedata_indices_provider(
     )
     instruments = [
         _instrument("SPX", DataCategory.INDICES, "twelvedata_indices", "SPY"),
+        _instrument("SSEC", DataCategory.INDICES, "twelvedata_indices", "000001.SS"),
+        _instrument("STOXX50", DataCategory.INDICES, "twelvedata_indices", "STOXX50"),
     ]
 
     result = await provider.fetch(instruments)
     _assert_live_payload(result, instruments)
+
+
+@pytest.mark.asyncio
+async def test_live_alphavantage_forex_provider(
+    live_http_client: HttpClient,
+    live_retry_policy: RetryPolicy,
+) -> None:
+    api_key = _read_env("ALPHAVANTAGE_API_KEY")
+    if not api_key:
+        pytest.skip("ALPHAVANTAGE_API_KEY is not set")
+
+    provider = AlphaVantageForexProvider(
+        live_http_client,
+        _live_cb("alphavantage_forex"),
+        live_retry_policy,
+        api_key,
+    )
+    instruments = [
+        _instrument("USD", DataCategory.CURRENCY, "alphavantage_forex", "USD"),
+        _instrument("EUR", DataCategory.CURRENCY, "alphavantage_forex", "EUR"),
+        _instrument("CNY", DataCategory.CURRENCY, "alphavantage_forex", "CNY"),
+    ]
+
+    result = await provider.fetch(instruments)
+    _assert_live_payload(result, instruments)
+    assert all(
+        price.buy is not None and price.sell is not None for price in result.values()
+    )
+
+
+@pytest.mark.asyncio
+async def test_live_twelvedata_forex_provider(
+    live_http_client: HttpClient,
+    live_retry_policy: RetryPolicy,
+) -> None:
+    api_key = _read_env("TWELVE_DATA_API_KEY")
+    if not api_key:
+        pytest.skip("TWELVE_DATA_API_KEY is not set")
+
+    provider = TwelveDataForexProvider(
+        live_http_client,
+        _live_cb("twelvedata_forex"),
+        live_retry_policy,
+        api_key,
+    )
+    instruments = [
+        _instrument("USD", DataCategory.CURRENCY, "twelvedata_forex", "USDRUB"),
+        _instrument("EUR", DataCategory.CURRENCY, "twelvedata_forex", "EURRUB"),
+        _instrument("CNY", DataCategory.CURRENCY, "twelvedata_forex", "CNYRUB"),
+    ]
+
+    result = await provider.fetch(instruments)
+    _assert_live_payload(result, instruments)
+    assert all(
+        price.buy is not None and price.sell is not None for price in result.values()
+    )

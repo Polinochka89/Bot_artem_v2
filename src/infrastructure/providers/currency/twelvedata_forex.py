@@ -11,11 +11,11 @@ from src.infrastructure.providers.base import BaseProvider
 from src.infrastructure.reliability import CircuitBreaker, RetryPolicy
 
 
-class AlphaVantageStocksProvider(BaseProvider):
-    _URL = "https://www.alphavantage.co/query"
+class TwelveDataForexProvider(BaseProvider):
+    _URL = "https://api.twelvedata.com/quote"
 
     def __init__(
-        self: AlphaVantageStocksProvider,
+        self: TwelveDataForexProvider,
         http: HttpClient,
         circuit_breaker: CircuitBreaker,
         retry_policy: RetryPolicy,
@@ -25,11 +25,11 @@ class AlphaVantageStocksProvider(BaseProvider):
         self._api_key = api_key
 
     @property
-    def name(self: AlphaVantageStocksProvider) -> str:
-        return "alphavantage"
+    def name(self: TwelveDataForexProvider) -> str:
+        return "twelvedata_forex"
 
     async def _do_fetch(
-        self: AlphaVantageStocksProvider,
+        self: TwelveDataForexProvider,
         instruments: list[Instrument],
     ) -> dict[str, Price]:
         if not self._api_key:
@@ -41,54 +41,55 @@ class AlphaVantageStocksProvider(BaseProvider):
 
         result: dict[str, Price] = {}
         for instrument in supported:
-            ticker = instrument.get_ticker(self.name)
-            if ticker is None:
+            pair = instrument.get_ticker(self.name)
+            if pair is None:
                 continue
 
             payload = await self._http.get_json(
                 self._URL,
-                params={
-                    "function": "GLOBAL_QUOTE",
-                    "symbol": ticker,
-                    "apikey": self._api_key,
-                },
+                params={"symbol": pair, "apikey": self._api_key},
             )
             quote = self._parse_payload(payload)
             if quote is None:
                 continue
 
-            value = self._validate_price(instrument.symbol, quote.get("05. price"))
-            change_pct = self._parse_change(quote.get("10. change percent"))
+            close = self._validate_price(instrument.symbol, quote.get("close"))
+            bid_raw = quote.get("bid")
+            ask_raw = quote.get("ask")
+            bid = (
+                None
+                if bid_raw is None
+                else self._validate_price(instrument.symbol, bid_raw)
+            )
+            ask = (
+                None
+                if ask_raw is None
+                else self._validate_price(instrument.symbol, ask_raw)
+            )
+            value = (
+                (bid + ask) / Decimal("2")
+                if bid is not None and ask is not None
+                else close
+            )
+
             result[instrument.symbol] = self._build_price(
                 instrument,
                 value,
-                change_pct=change_pct,
+                buy=bid,
+                sell=ask,
             )
 
         return result
 
     def _parse_payload(
-        self: AlphaVantageStocksProvider,
+        self: TwelveDataForexProvider,
         payload: JsonValue,
     ) -> Mapping[str, object] | None:
         if not isinstance(payload, Mapping):
             raise DataValidationError(self.name, "*", "payload is not an object")
 
-        if "Note" in payload or "Information" in payload or "Error Message" in payload:
+        status = payload.get("status")
+        if isinstance(status, str) and status.lower() == "error":
             return None
 
-        quote = payload.get("Global Quote")
-        if not isinstance(quote, Mapping):
-            return None
-        return quote
-
-    def _parse_change(
-        self: AlphaVantageStocksProvider,
-        value: object,
-    ) -> Decimal | None:
-        if value is None:
-            return None
-        normalized = str(value).replace("%", "").strip()
-        if not normalized:
-            return None
-        return Decimal(normalized)
+        return payload

@@ -11,11 +11,11 @@ from src.infrastructure.providers.base import BaseProvider
 from src.infrastructure.reliability import CircuitBreaker, RetryPolicy
 
 
-class AlphaVantageStocksProvider(BaseProvider):
+class AlphaVantageForexProvider(BaseProvider):
     _URL = "https://www.alphavantage.co/query"
 
     def __init__(
-        self: AlphaVantageStocksProvider,
+        self: AlphaVantageForexProvider,
         http: HttpClient,
         circuit_breaker: CircuitBreaker,
         retry_policy: RetryPolicy,
@@ -25,11 +25,11 @@ class AlphaVantageStocksProvider(BaseProvider):
         self._api_key = api_key
 
     @property
-    def name(self: AlphaVantageStocksProvider) -> str:
-        return "alphavantage"
+    def name(self: AlphaVantageForexProvider) -> str:
+        return "alphavantage_forex"
 
     async def _do_fetch(
-        self: AlphaVantageStocksProvider,
+        self: AlphaVantageForexProvider,
         instruments: list[Instrument],
     ) -> dict[str, Price]:
         if not self._api_key:
@@ -41,15 +41,16 @@ class AlphaVantageStocksProvider(BaseProvider):
 
         result: dict[str, Price] = {}
         for instrument in supported:
-            ticker = instrument.get_ticker(self.name)
-            if ticker is None:
+            quote_ccy = instrument.get_ticker(self.name)
+            if quote_ccy is None:
                 continue
 
             payload = await self._http.get_json(
                 self._URL,
                 params={
-                    "function": "GLOBAL_QUOTE",
-                    "symbol": ticker,
+                    "function": "CURRENCY_EXCHANGE_RATE",
+                    "from_currency": quote_ccy,
+                    "to_currency": "RUB",
                     "apikey": self._api_key,
                 },
             )
@@ -57,18 +58,25 @@ class AlphaVantageStocksProvider(BaseProvider):
             if quote is None:
                 continue
 
-            value = self._validate_price(instrument.symbol, quote.get("05. price"))
-            change_pct = self._parse_change(quote.get("10. change percent"))
+            rate = self._validate_price(
+                instrument.symbol,
+                quote.get("5. Exchange Rate"),
+            )
+            bid = self._validate_price(instrument.symbol, quote.get("8. Bid Price"))
+            ask = self._validate_price(instrument.symbol, quote.get("9. Ask Price"))
+            value = (bid + ask) / Decimal("2") if bid and ask else rate
+
             result[instrument.symbol] = self._build_price(
                 instrument,
                 value,
-                change_pct=change_pct,
+                buy=bid,
+                sell=ask,
             )
 
         return result
 
     def _parse_payload(
-        self: AlphaVantageStocksProvider,
+        self: AlphaVantageForexProvider,
         payload: JsonValue,
     ) -> Mapping[str, object] | None:
         if not isinstance(payload, Mapping):
@@ -77,18 +85,7 @@ class AlphaVantageStocksProvider(BaseProvider):
         if "Note" in payload or "Information" in payload or "Error Message" in payload:
             return None
 
-        quote = payload.get("Global Quote")
+        quote = payload.get("Realtime Currency Exchange Rate")
         if not isinstance(quote, Mapping):
             return None
         return quote
-
-    def _parse_change(
-        self: AlphaVantageStocksProvider,
-        value: object,
-    ) -> Decimal | None:
-        if value is None:
-            return None
-        normalized = str(value).replace("%", "").strip()
-        if not normalized:
-            return None
-        return Decimal(normalized)

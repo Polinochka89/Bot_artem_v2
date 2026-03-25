@@ -6,10 +6,12 @@ from src.infrastructure.providers.indices.stooq_indices import StooqIndicesProvi
 from src.infrastructure.providers.indices.twelve_data_indices import (
     TwelveDataIndicesProvider,
 )
+from src.infrastructure.providers.indices.yahoo_indices import YahooIndicesProvider
 
 __all__ = [
     "AlphaVantageIndicesProvider",
     "MoexIndicesProvider",
     "StooqIndicesProvider",
     "TwelveDataIndicesProvider",
+    "YahooIndicesProvider",
 ]

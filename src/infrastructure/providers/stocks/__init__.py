@@ -11,6 +11,7 @@ from src.infrastructure.providers.stocks.tinkoff import TinkoffProvider
 from src.infrastructure.providers.stocks.twelve_data_stocks import (
     TwelveDataStocksProvider,
 )
+from src.infrastructure.providers.stocks.yahoo_stocks import YahooStocksProvider
 
 __all__ = [
     "AlphaVantageStocksProvider",
@@ -20,4 +21,5 @@ __all__ = [
     "TinkoffQuotation",
     "TinkoffResponse",
     "TwelveDataStocksProvider",
+    "YahooStocksProvider",
 ]

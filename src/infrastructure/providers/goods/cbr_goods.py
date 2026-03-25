@@ -44,7 +44,6 @@ class CbrGoodsProvider(BaseProvider):
         supported: list[Instrument],
         records: list[Tag],
     ) -> dict[str, Price]:
-
         result: dict[str, Price] = {}
         for instrument in supported:
             ticker = instrument.get_ticker(self.name)
@@ -134,10 +133,10 @@ class CbrGoodsProvider(BaseProvider):
         upper_ticker = ticker.strip().upper()
         for record in records:
             code = (
-                record.attrs.get("Code")
-                or record.attrs.get("code")
-                or ""
-            ).strip().upper()
+                (record.attrs.get("Code") or record.attrs.get("code") or "")
+                .strip()
+                .upper()
+            )
             metal_tag = record.find("metal")
             name_tag = record.find("name")
             metal = (metal_tag.text if metal_tag else "").strip().upper()
