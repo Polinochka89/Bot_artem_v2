@@ -38,13 +38,13 @@ stocks:
     emoji: "🏦"
     ticker_map:
       moex: "SBER"
-      tinkoff: "SBER"
+      tinkoff: "BBG004730N88"
   - symbol: GAZP
     display_name: "Газпром"
     emoji: "🔵"
     ticker_map:
       moex: "GAZP"
-      tinkoff: "GAZP"
+      tinkoff: "BBG004730RP0"
 
 indices:
   - symbol: IMOEX
