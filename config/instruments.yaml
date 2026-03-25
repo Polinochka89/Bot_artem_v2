@@ -1,0 +1,68 @@
+crypto:
+  - symbol: BTC
+    display_name: "Bitcoin"
+    emoji: "₿"
+    ticker_map:
+      coingecko: "bitcoin"
+      coincap: "bitcoin"
+  - symbol: ETH
+    display_name: "Ethereum"
+    emoji: "Ξ"
+    ticker_map:
+      coingecko: "ethereum"
+      coincap: "ethereum"
+
+currency:
+  - symbol: USD
+    display_name: "Доллар США"
+    emoji: "💵"
+    ticker_map:
+      cbr: "USD"
+      exchangerate: "USD"
+  - symbol: EUR
+    display_name: "Евро"
+    emoji: "💶"
+    ticker_map:
+      cbr: "EUR"
+      exchangerate: "EUR"
+  - symbol: CNY
+    display_name: "Юань"
+    emoji: "🇨🇳"
+    ticker_map:
+      cbr: "CNY"
+      exchangerate: "CNY"
+
+stocks:
+  - symbol: SBER
+    display_name: "Сбербанк"
+    emoji: "🏦"
+    ticker_map:
+      moex: "SBER"
+      tinkoff: "SBER"
+  - symbol: GAZP
+    display_name: "Газпром"
+    emoji: "🔵"
+    ticker_map:
+      moex: "GAZP"
+      tinkoff: "GAZP"
+
+indices:
+  - symbol: IMOEX
+    display_name: "МосБиржа"
+    emoji: "🇷🇺"
+    ticker_map:
+      moex_indices: "IMOEX"
+      stooq: "^WIG"
+
+goods:
+  - symbol: GOLD
+    display_name: "Золото"
+    emoji: "🥇"
+    ticker_map:
+      cbr: "GOLD"
+      stooq: "GC.F"
+  - symbol: OIL
+    display_name: "Нефть Brent"
+    emoji: "🛢️"
+    ticker_map:
+      stooq: "CB.F"
